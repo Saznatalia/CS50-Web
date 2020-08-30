@@ -1,0 +1,125 @@
+.search_body, .main_body {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: Arial, Helvetica;
+}
+
+.main_body {
+  background-image: url("books2.png");
+}
+
+.search_body {
+  background-image: url("books1.jpg");
+}
+
+.header {
+  text-align: center;
+  top: 10%;
+  left: 50%;
+}
+
+.header h1 {
+  font-weight: 700;
+}
+
+.header h3 {
+  font-weight: 600;
+}
+
+.container {
+  padding-top: 15px;
+  text-align: center;
+  font-size: large;
+}
+
+.container h4 {
+  font-weight: 600;
+}
+
+.reglink {
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
+  font-weight: 400;
+  text-align: center;
+  padding: 0.375rem 0.75rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+}
+
+.reglink:hover {
+  color: #E88312;
+}
+
+.search_input {
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid #343a40;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+.search_button {
+  width: 20%;
+  padding: 10px;
+  background: grey;
+  color: white;
+  font-size: 17px;
+  border: 1px solid #343a40 ;
+  border-left: none;
+  cursor: pointer;
+}
+
+.search_button:hover {
+  background: #343a40;
+}
+
+.search_button:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.logout {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: larger;
+}
+
+@media screen and (max-width: 1000px) {
+  .logout {
+    font-size: large;
+    position: relative;
+    right: inherit;
+    text-align: center;
+  }
+}
+
+.book_link {
+  color: black}
+
+.book_link:hover {
+  color: purple;
+}
+
+.review_text {
+  width: 100%;
+  min-height: 100px;
+  text-align: left;
+}
+
+.rating {
+  display: inline-block;
+}
+
+.rating-value {
+  padding-left: 10px;
+}
+
+.review_list {
+  padding: 0;
+}

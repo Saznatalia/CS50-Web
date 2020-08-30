@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Apology
+{% endblock %}
+
+{% block content %}
+    <body class="main_body"> 
+        <div class="container">
+            {{ top }}
+            <br/>
+            {{ message }}
+        </div>
+        {% if session.user_id %}
+            <div class="container">
+                <a href="/" class="reglink">Back to Search</a>
+            </div>
+        {% else %}
+        <div class="container">
+            <a href="/" class="reglink">Back to Login</a>
+        </div>
+        {% endif %}
+    </body>
+{% endblock %}

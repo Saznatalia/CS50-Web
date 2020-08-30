@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block content %}
+    <body class="search_body">
+        <form action="/result" class="search" method="POST">
+            <div class="header">
+                    <h1>BOOKS REVIEW</h1>
+                    <h3>CS50 Web Programming Project 1</h3>
+            </div>
+            <div class="container">
+                <input class="search_input" type="text" placeholder="Search..." name="search_input">
+                <button type="submit" class="search_button"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="logout">
+                <a href="/change" class="reglink">Change Password</a>
+                <a href="/logout" class="reglink">Log Out</a>
+            </div>
+        </form>
+    </body>
+{% endblock %}

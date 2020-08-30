@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Result
+{% endblock %}
+
+{% block content %}
+    <body class="search_body">
+        <div class="header">
+                <h1>BOOKS REVIEW</h1>
+                <h3>CS50 Web Programming Project 1</h3>
+        </div>
+        <div class="container" style="text-align: left;">
+            {% for book in books %}
+                <ul> <a href="{{ url_for('book_page', isbn=book['isbn']) }}" class="book_link"> "{{ book["title"] }}" by  {{ book["author"] }}, {{ book["year"] }}, ISBN: {{ book["isbn"] }}</a> </ul>
+            {% endfor %}
+        </div>
+        <div class="container">
+            <a href="/search" class="reglink">Back to Search</a>
+        </div>
+        <div class="logout">
+            <a href="/change" class="reglink">Change Password</a>
+            <a href="/logout" class="reglink">Log Out</a>
+        </div>
+    </body>
+{% endblock %}

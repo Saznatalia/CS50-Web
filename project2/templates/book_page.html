@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Book Page
+{% endblock %}
+
+{% block content %}
+    <body class="search_body">
+        <div class="header">
+                <h1>BOOKS REVIEW</h1>
+                <h3>CS50 Web Programming Project 1</h3>
+        </div>
+        <br/>
+        <div class="container" style="text-align:left">
+            <h3 style="color: #0000FF; font-weight: bold">{{ book['title'] }}</h3>
+            author: {{ book['author'] }} <br/>
+            year published: {{ book['year'] }} <br/>
+            ISBN: {{ book['isbn'] }} <br/>
+        </div>
+        <div class="container" style="text-align:left">
+            <h4>REVIEWS</h4>
+            {% if reviews == [] %}
+                No reviews for this book yet
+            {% endif %}
+
+            {% for review in reviews %}
+            <ul class="review_list">{{ review["user_name"]}} rated it {{ review["rate"] }}: "{{ review["review"] }}" </ul>
+            {% endfor %}
+        </div>
+        <div class="container" style="text-align:left">
+            <h4>Goodreads reviews</h4>
+            {% if goodreads_reviews == [] %}
+            No reviews for this book yet
+            {% endif %}
+            <ul class="review_list">{{ goodreads_reviews["work_ratings_count"] }} of Goodreads users read this book and gave it an average rate - {{ goodreads_reviews["average_rating"] }}</ul>
+        </div>
+        <form method="post">
+        <div class="container" style="text-align:left">
+            <h5 style="color: #0000FF; font-weight: bold">Rate this book</h5> 
+            <div class="rating">
+                <span class="fa fa-star-o"></span>
+                <span class="fa fa-star-o"></span>
+                <span class="fa fa-star-o"></span>
+                <span class="fa fa-star-o"></span>
+                <span class="fa fa-star-o"></span>
+            </div>
+            <input type="hidden" id="rating-value" class="rating-value" name="rating-value"></input>
+            <textarea class="review_text" id="review" name="review"></textarea>  
+        </div>
+        <div class="container">
+            <button type="submit" class="btn btn-dark">SUBMIT</button>
+        </div>
+        </form>
+        <div class="container">
+            <a href="/search" class="reglink">Back to Search</a>
+        </div>
+        <div class="logout">
+            <a href="/change" class="reglink">Change Password</a>
+            <a href="/logout" class="reglink">Log Out</a>
+        </div>
+
+<script>
+
+const stars=document.querySelector(".rating").children;
+const ratingValue=document.querySelector("#rating-value");
+console.log(ratingValue);
+let index;
+  
+    for(let i=0; i<stars.length; i++) {
+        stars[i].addEventListener("mouseover",function() {
+            for(let j=0; j<stars.length; j++){
+                stars[j].classList.remove("fa-star");		 	
+                stars[j].classList.add("fa-star-o");		 	
+            }
+            for(let j=0; j<=i; j++) {
+                stars[j].classList.remove("fa-star-o");		 	
+                stars[j].classList.add("fa-star");		 	
+            }
+  	})
+  	stars[i].addEventListener("click",function() {
+      ratingValue.value=i+1;
+      index=i;
+  	})
+  	stars[i].addEventListener("mouseout",function() {
+  		 
+  		 for(let j=0; j<stars.length; j++) {
+  		 	stars[j].classList.remove("fa-star");		 	
+            stars[j].classList.add("fa-star-o");		 	
+  		 }
+  		 for(let j=0; j<=index; j++) {
+  		 	stars[j].classList.remove("fa-star-o");		 	
+           stars[j].classList.add("fa-star");		 	
+  		 }
+      })
+  }
+</script>
+
+</body>
+{% endblock %}

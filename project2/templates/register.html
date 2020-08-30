@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block content %}
+    <body class="main_body"> 
+        <form method="post" class="register">     
+            <div class="header">
+                    <h1>BOOKS REVIEW</h1>
+                    <h3>CS50 Web Programming Project 1</h3>
+            </div>
+            <div class="container">
+                <h4>REGISTER AN ACCOUNT</h4>
+                <div class="row">
+                    <div class="col" style="text-align: left;">
+                        <label for="username"><b>Username</b></label>
+                    </div>
+                    <div class="col">
+                        <input type="text" placeholder="Enter username" name="username" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="text-align: left;">
+                        <label for="password" ><b>Password</b></label>
+                    </div>
+                    <div class="col">
+                        <input type="password" placeholder="Enter password" name="password" required>                        
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="text-align: left;">
+                        <label for="confirmation"><b>Confirm Password</b></label>
+                    </div>
+                    <div class="col">
+                        <input type="password" placeholder="Confirm password" name="confirmation" required>                        
+                    </div>
+                </div>
+                <br/>
+                <button type="submit" class="btn btn-dark">REGISTER</button>
+            </div>
+        </form>
+    </body>
+{% endblock %}

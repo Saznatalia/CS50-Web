@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login 
+{% endblock %}
+
+{% block content %}
+    <body class="main_body"> 
+        <form method="post" class="index">     
+            <div class="header">
+                    <h1>BOOKS REVIEW</h1>
+                    <h3>CS50 Web Programming Project 1</h3>
+            </div>
+            <div class="container">
+                <!-- Login Part -->
+                <h4>LOGIN TO ACCOUNT</h4>
+                <label for="username"><b>Username</b></label>
+                <input type="text" placeholder="Enter username" name="username" required>
+                <br/>       
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter password" name="password" required>
+                <br/>
+                <button type="submit" class="btn btn-dark">Login</button>
+            </div>
+        </form>
+        <div class="container" style="font-weight: bold;">
+            <!-- Register Part -->
+            Don't have an account? Register one!<br/>
+            <a href="/register" class="reglink">Register an account</a>
+        </div>
+    </body>
+{% endblock %}
