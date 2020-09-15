@@ -13,9 +13,6 @@ class NewPageForm(forms.Form):
     title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'class': "title"}))
     content = forms.CharField(label="Content", widget=forms.Textarea(attrs={'class':'content'}))
 
-class EditPageForm(forms.Form):
-    content = forms.CharField(initial='title', label="Edit Content", widget=forms.Textarea(attrs={'class':'content'}))
-
 # Home Page
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -29,6 +26,17 @@ def entry(request, title):
     # If entry doesn't exist returns error page
     if entry == None:
             return render(request, "encyclopedia/error.html")
+
+    # Check if method is POST
+    if request.method == "POST":
+        updated_content = request.POST.get('textarea')
+        print(updated_content)
+
+        # If updated save updated entry to disk
+        updated_entry = util.save_entry(title, updated_content)
+
+        # Display updated entry page to user
+        return HttpResponseRedirect(reverse("encyclopedia:entry", args=(title,)))
 
     # If entry exists return presents entry's page 
     return render(request, "encyclopedia/title.html", {
@@ -116,26 +124,22 @@ def edit_page(request, title):
     # If entry doesn't exist returns error page
     if entry == None:
             return render(request, "encyclopedia/error.html")
-
-
-    if request.method == "POST":
-        print("1")
-        return HttpResponseRedirect(reverse("encyclopedia:entry", args=(title,)))
     
-    # If method is GET present edit page form to user
+    # Present edit page form to user
     return render(request, "encyclopedia/edit_page.html", {
         "title": title,
-        "form": EditPageForm()
+        "entry": entry
     })
 
 # Random Page
 def random_page(request):
     entries = util.list_entries()
-    random_entry = util.get_entry(random.choice(entries))
+    random_title = random.choice(entries)
+    random_entry = util.get_entry(random_title)
 
     # Return page with random entry
     return render(request, "encyclopedia/random.html", {
         "random_entry": markdown2.markdown(random_entry),
-        "title": random.choice(entries)
+        "title": random_title
     })
 
