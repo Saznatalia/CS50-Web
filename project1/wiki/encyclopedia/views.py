@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpRequest
 from django import forms
 
 from . import util
@@ -13,6 +13,9 @@ class NewPageForm(forms.Form):
     title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'class': "title"}))
     content = forms.CharField(label="Content", widget=forms.Textarea(attrs={'class':'content'}))
 
+class EditPageForm(forms.Form):
+    content = forms.CharField(initial='title', label="Edit Content", widget=forms.Textarea(attrs={'class':'content'}))
+
 # Home Page
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -20,16 +23,17 @@ def index(request):
     })
 
 # Entry Page
-def title(request, title):
-    title = util.get_entry(title)
+def entry(request, title):
+    entry = util.get_entry(title)
 
     # If entry doesn't exist returns error page
-    if title == None:
+    if entry == None:
             return render(request, "encyclopedia/error.html")
 
     # If entry exists return presents entry's page 
     return render(request, "encyclopedia/title.html", {
-        "title": markdown2.markdown(title)
+        "entry": markdown2.markdown(entry),
+        "title": title
     })
 
 # Search
@@ -91,7 +95,7 @@ def new_page(request):
             new_entry = util.save_entry(title, content)
 
             # Display new entry page to user
-            return HttpResponseRedirect(reverse("encyclopedia:title", args=(title,)))
+            return HttpResponseRedirect(reverse("encyclopedia:entry", args=(title,)))
 
         else:
 
@@ -105,13 +109,33 @@ def new_page(request):
         "form": NewPageForm()
     })
 
+# Edit Page
+def edit_page(request, title):
+    entry = util.get_entry(title)
+
+    # If entry doesn't exist returns error page
+    if entry == None:
+            return render(request, "encyclopedia/error.html")
+
+
+    if request.method == "POST":
+        print("1")
+        return HttpResponseRedirect(reverse("encyclopedia:entry", args=(title,)))
+    
+    # If method is GET present edit page form to user
+    return render(request, "encyclopedia/edit_page.html", {
+        "title": title,
+        "form": EditPageForm()
+    })
+
 # Random Page
 def random_page(request):
     entries = util.list_entries()
     random_entry = util.get_entry(random.choice(entries))
-    print(random_entry)
 
+    # Return page with random entry
     return render(request, "encyclopedia/random.html", {
-        "random_entry": markdown2.markdown(random_entry)   
+        "random_entry": markdown2.markdown(random_entry),
+        "title": random.choice(entries)
     })
 
