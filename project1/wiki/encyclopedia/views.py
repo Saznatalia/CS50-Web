@@ -44,7 +44,7 @@ def entry(request, title):
         "title": title
     })
 
-# Search
+# Search Bar
 def search(request):
     query = request.GET['q']
     entries = util.list_entries()
@@ -55,7 +55,7 @@ def search(request):
     
     # Redirect to existing entry page if query is same as existing entry
     if query in entries_lower:
-        return HttpResponseRedirect(reverse("encyclopedia:title", args=(query,)))
+        return HttpResponseRedirect(reverse("encyclopedia:entry", args=(query,)))
     
     # Check if query is sub-string of entries
     for entry in entries_lower:

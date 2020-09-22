@@ -9,7 +9,7 @@
     <form action="{% url 'encyclopedia:entry' title %}" method="post">
         {% csrf_token %}
         <label for textarea>Edit Content</label>
-        <textarea name="textarea" class="content"> {{ entry }} </textarea>
+        <textarea name="textarea" class="content">{{entry}}</textarea>
         <input type="submit" value="Save Changes">
     </form>
 {% endblock %}
