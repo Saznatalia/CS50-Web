@@ -4,6 +4,8 @@ textarea {
 
 .email_body {
     border: 1px solid;
+    display: flex;
+    flex-shrink: 3;
 }
 
 .email_body div {
