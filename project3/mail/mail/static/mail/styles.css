@@ -1,3 +1,13 @@
 textarea {
     min-height: 400px;
 }
+
+.email_body {
+    border: 1px solid;
+}
+
+.email_body div {
+    display: inline-block;
+    padding: 5px;
+    margin: 0;
+}
