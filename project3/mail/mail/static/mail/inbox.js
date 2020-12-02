@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function compose_email() {
 
   // Show compose view and hide other views
+  document.querySelector('#container').style.display = 'none';
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
@@ -84,6 +85,8 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#container').style.display = 'block';
+
   
   // Check for an old error message, if any then remove
   if (document.querySelector('#error') != null) {
@@ -100,6 +103,7 @@ function load_mailbox(mailbox) {
   .then(response => response.json())
   .then(emails => {
     console.log(emails);
+    document.querySelector('#container').replaceChildren();
         
     // Display styled elements to user 
     for (email in emails) {
@@ -116,10 +120,11 @@ function load_mailbox(mailbox) {
 
       // Style elements
       sender.style.fontWeight = 'bold';
-      sender.style.float = 'left';
-      subject.style.marginLeft = '20px';
-      timestamp.style.float = 'right';
-      timestamp.style.color = 'darkgrey';  
+      sender.style.width = '20vw';
+      subject.style.width = '50vw';
+      timestamp.style.color = 'darkgrey';
+      timestamp.style.width = '27vw';  
+      timestamp.style.textAlign = 'right';
       if (emails[email]['read'] == false) {
         email_body.style.backgroundColor = 'white';
       }
