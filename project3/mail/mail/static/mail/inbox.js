@@ -113,6 +113,7 @@ function load_mailbox(mailbox) {
       const sender = document.createElement('div');
       const subject = document.createElement('div');
       const timestamp = document.createElement('div');
+      const id = emails[email]['id'];
 
       sender.innerHTML = emails[email]['sender'];
       subject.innerHTML = emails[email]['subject'];
@@ -136,13 +137,57 @@ function load_mailbox(mailbox) {
       email_body.appendChild(sender);
       email_body.appendChild(subject);
       email_body.appendChild(timestamp);
-      email_body.addEventListener('click', () => load_email());
+      email_body.addEventListener('click', () => load_email(id));
       document.querySelector('#container').append(email_body);
     }
   });
 };
 
-function load_email() {
+function load_email(id) {
+  // Show the mailbox and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#container').style.display = 'none';
+  document.querySelector('#view-email').style.display = 'block';
 
-  console.log('This element has been clicked!');
+  
+  // Check for an old error message, if any then remove
+  if (document.querySelector('#error') != null) {
+    var old_error = document.querySelector('#error');
+    old_error.remove();
+  }
+
+  fetch(`emails/${id}`, {
+    method: 'GET'
+  })
+  .then(response => response.json())
+  .then(emails => {
+    console.log('This element has been clicked!');
+    console.log(id);
+    
+    // Display details of emil to user
+    for (email in emails) { 
+
+      const sender = document.createElement('div');
+      const recipients = document.createElement('div');
+      const subject = document.createElement('div');
+      const timestamp = document.createElement('div');
+      const body = document.createElement('div');
+      const read = emails[email]['read'];
+      const archived = emails[email]['archived'];
+
+      sender.innerHTML = emails[email]['sender'];
+      recipients.innerHTML = emails[email]['recipients']
+      subject.innerHTML = emails[email]['subject'];
+      timestamp.innerHTML = emails[email]['timestamp'];
+      body.innerHTML = emails[email]['body']
+
+      document.querySelector('#view-email').appendChild(sender);
+      // document.querySelector('#view-email').append(recipients);
+      // document.querySelector('#view-email').append(subject);
+      // document.querySelector('#view-email').append(timestamp);
+      // document.querySelector('#view-email').append(body);
+
+    }
+  });
 }
