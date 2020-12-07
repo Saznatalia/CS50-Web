@@ -16,6 +16,7 @@ function compose_email() {
   document.querySelector('#container').style.display = 'none';
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
+  document.querySelector('#view-email').style.display = 'none';
 
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
@@ -85,6 +86,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#view-email').style.display = 'none';
   document.querySelector('#container').style.display = 'block';
 
   
@@ -139,6 +141,8 @@ function load_mailbox(mailbox) {
       email_body.appendChild(timestamp);
       email_body.addEventListener('click', () => load_email(id));
       document.querySelector('#container').append(email_body);
+
+      // Set-up email as read 
     }
   });
 };
@@ -162,32 +166,49 @@ function load_email(id) {
   })
   .then(response => response.json())
   .then(emails => {
-    console.log('This element has been clicked!');
-    console.log(id);
-    
-    // Display details of emil to user
-    for (email in emails) { 
+    console.log(emails);
+    document.querySelector('#view-email').replaceChildren();
+   
+    // Create new elements to display email details to user
+    const sender = document.createElement('div');
+    const recipients = document.createElement('div');
+    const subject = document.createElement('div');
+    const timestamp = document.createElement('div');
+    const body = document.createElement('div');
+    const reply_button = document.createElement('button');
+    reply_button.setAttribute('class', 'btn btn-sm btn-outline-primary');
+    const archive_button = document.createElement('button');
+    archive_button.setAttribute('class', 'btn btn-sm btn-outline-primary');
 
-      const sender = document.createElement('div');
-      const recipients = document.createElement('div');
-      const subject = document.createElement('div');
-      const timestamp = document.createElement('div');
-      const body = document.createElement('div');
-      const read = emails[email]['read'];
-      const archived = emails[email]['archived'];
+    // Set up inner html of each element, i.e. what is going to be displayed
+    const read = emails['read'];
+    const archived = emails['archived'];
+    sender.innerHTML = 'From: ' + emails['sender'];
+    recipients.innerHTML = 'To: ' + emails['recipients']
+    subject.innerHTML = 'Subject:' + emails['subject'];
+    timestamp.innerHTML = 'Timestamp: ' + emails['timestamp'];
+    body.innerHTML = emails['body'];
+    body.setAttribute('class', 'body');
+    reply_button.innerHTML = 'Reply';
+    reply_button.addEventListener('click', () => reply());
+    archive_button.innerHTML = 'Archive';
+    archive_button.addEventListener('click', () => archive());
 
-      sender.innerHTML = emails[email]['sender'];
-      recipients.innerHTML = emails[email]['recipients']
-      subject.innerHTML = emails[email]['subject'];
-      timestamp.innerHTML = emails[email]['timestamp'];
-      body.innerHTML = emails[email]['body']
-
-      document.querySelector('#view-email').appendChild(sender);
-      // document.querySelector('#view-email').append(recipients);
-      // document.querySelector('#view-email').append(subject);
-      // document.querySelector('#view-email').append(timestamp);
-      // document.querySelector('#view-email').append(body);
-
-    }
+    // Add above elements to the html body
+    document.querySelector('#view-email').appendChild(sender);
+    document.querySelector('#view-email').appendChild(recipients);
+    document.querySelector('#view-email').appendChild(subject);
+    document.querySelector('#view-email').appendChild(timestamp);
+    document.querySelector('#view-email').appendChild(body);
+    document.querySelector('#view-email').appendChild(reply_button);
+    document.querySelector('#view-email').appendChild(archive_button);
   });
+}
+
+function reply() {
+  console.log("Reply clicked!");
+}
+
+function archive() {
+  console.log("Archive clicked!")
 }

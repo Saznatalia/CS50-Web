@@ -13,3 +13,12 @@ textarea {
     padding: 5px;
     margin: 0;
 }
+
+.body {
+    min-height: 35vh;
+    margin-top: 20px;
+}
+
+#view-email button {
+    margin-right: 10px;
+}
