@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-
   // Use buttons to toggle between views
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function compose_email() {
-
   // Show compose view and hide other views
   document.querySelector('#container').style.display = 'none';
   document.querySelector('#emails-view').style.display = 'none';
@@ -81,15 +79,13 @@ function compose_email() {
   }
 }
 
-function load_mailbox(mailbox) {
- 
+function load_mailbox(mailbox) { 
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#view-email').style.display = 'none';
   document.querySelector('#container').style.display = 'block';
 
-  
   // Check for an old error message, if any then remove
   if (document.querySelector('#error') != null) {
     var old_error = document.querySelector('#error');
@@ -99,6 +95,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
+  // Load appropriate mailbox and let user click on emails to see details
   fetch(`emails/${mailbox}`, {
     method: 'GET'
   })
@@ -158,6 +155,7 @@ function load_email(id, mailbox) {
     old_error.remove();
   }
 
+  // Mark email "read" once it was clicked
   fetch(`emails/${id}`, {
     method: 'PUT',
     body: JSON.stringify({
@@ -165,6 +163,7 @@ function load_email(id, mailbox) {
     })
   });
 
+  // Present details of the email to user
   fetch(`emails/${id}`, {
     method: 'GET'
   })
@@ -217,14 +216,15 @@ function load_email(id, mailbox) {
     if (mailbox === 'archive') {
       document.querySelector('#view-email').appendChild(unarchive_button);
     }
-
   });
 }
 
+// Reply function
 function reply() {
   console.log("Reply clicked!");
 }
 
+// Archive email function
 function archive(id) {
   fetch(`emails/${id}`, {
     method: 'PUT',
@@ -237,6 +237,7 @@ function archive(id) {
   })    
 }
 
+// Unarchive email function
 function unarchive(id) {
   fetch(`emails/${id}`, {
     method: 'PUT',
