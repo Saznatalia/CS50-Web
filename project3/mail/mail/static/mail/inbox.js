@@ -105,7 +105,7 @@ function load_mailbox(mailbox) {
   .then(emails => {
     document.querySelector('#container').replaceChildren();
        
-    // Display styled elements to user 
+    // Create all elements necessary 
     for (email in emails) {
       const email_body = document.createElement('div');
       email_body.setAttribute('id', 'email_body');
@@ -115,6 +115,7 @@ function load_mailbox(mailbox) {
       const timestamp = document.createElement('div');
       const id = emails[email]['id'];
 
+      // Fill innerHTML to present to user
       sender.innerHTML = 'From: ' + emails[email]['sender'];
       subject.innerHTML = emails[email]['subject'];
       timestamp.innerHTML = emails[email]['timestamp'];
@@ -127,7 +128,7 @@ function load_mailbox(mailbox) {
       sender.style.width = '30vw';
       subject.style.width = '50vw';
       timestamp.style.color = 'darkgrey';
-      timestamp.style.width = '27vw';  
+      timestamp.style.width = '30vw';  
       timestamp.style.textAlign = 'right';
       if (emails[email]['read'] == false) {
         email_body.style.backgroundColor = 'white';
