@@ -181,7 +181,7 @@ function load_email(id, mailbox) {
     const recipients = document.createElement('div');
     const subject = document.createElement('div');
     const timestamp = document.createElement('div');
-    const body = document.createElement('div');
+    const body = document.createElement('pre');
     const reply_button = document.createElement('button');
     reply_button.setAttribute('class', 'btn btn-sm btn-outline-primary');
     reply_button.setAttribute('id', 'reply_button');
@@ -230,10 +230,10 @@ function reply(email) {
 
   // Pre-fill required composition fields
   document.querySelector('#compose-recipients').value = email['sender'];
-  if (document.querySelector('#compose-subject').value === email['subject']) {
-    document.querySelector('#compose-subject').value = 'Re: ' + email['subject'];
-  };
-  document.querySelector('#compose-subject').value = email['subject'];
+  if (email['subject'].substring(0,3) != "Re:") {
+    email['subject'] = 'Re: ' + email['subject'];
+  }
+  document.querySelector('#compose-subject').value = email["subject"]
   document.querySelector('#compose-body').value = '\n\n-----On ' + email['timestamp'] + ' ' + email['recipients'] + ' wrote: ' + email['body'];
 }
 
