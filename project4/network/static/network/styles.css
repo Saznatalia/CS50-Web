@@ -1,0 +1,18 @@
+.body {
+    margin: 10px;
+}
+
+.post_div {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid lightgray;
+}
+
+.post {
+    width: 100%;
+    min-height: 15vh;
+}
+
+.btn_post {
+    margin-top: 10px;
+}

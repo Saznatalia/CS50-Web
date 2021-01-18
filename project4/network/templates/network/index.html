@@ -1,0 +1,21 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+{% if user.is_authenticated %}
+    <div class='post_div'>
+        <h5>New Post</h5>
+        <form action='' method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input class="btn_post" type="submit" value="Post">
+        </form>
+    </div>
+    <div>
+    <ul>
+        {% for post in posts %}
+        <li>{{ post.user }}: {{ post.post }} {{ post.post_date }} {{ post.likes }}</li>
+        {% endfor %}
+    </ul>
+    </div>
+{% endif %}
+{% endblock %}
