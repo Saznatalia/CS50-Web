@@ -21,15 +21,20 @@ def index(request):
         # Check if form data is valid (server-side)
         if form.is_valid():
             
-            # Isolate the title and content from the 'cleaned' version of form data
             new_post = form.cleaned_data["new_post"]
             user = request.user
-            
-            post = Post.objects.create(post=new_post, user=user)
-            print(post)
+
+            # Attempt to create new user
+            try:
+                post = Post.objects.create(post=new_post, user=user)
+            except IntegrityError:
+                return render(request, "network/index.html", {
+                    "message": "Post already exists."
+                })            
                       
             return render(request, "network/index.html", {
                 'form': NewPostForm(),
+                'posts': Post.objects.all()
             })
         # If the form is invalid, re-render the page with existing information.    
         else:
