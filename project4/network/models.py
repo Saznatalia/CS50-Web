@@ -8,7 +8,7 @@ class User(AbstractUser):
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     post_date = models.DateTimeField(default=datetime.now())
-    post = models.TextField()
+    content = models.TextField()
     likes = models.ManyToManyField(User, blank=True, related_name='likes')
 
     def __str__(self):
