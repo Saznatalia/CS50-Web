@@ -3,12 +3,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function load_posts() {
-    fetch('/posts', {
+    fetch('/api/posts', {
         method: 'GET'
     })
     .then(response => response.json())
-    .then(() => {
-        console.log(response);
-        console.log("Hello World")
+    .then((data) => {
+        console.log(data);
+        // var ListedItems = data.response;
+        // console.log(ListedItems);
+        // const postsElement = document.getElementById("posts");
+        // console.log(postsElement);
+        // postsElement.innerHTML = "Loading..."
     })
 } 

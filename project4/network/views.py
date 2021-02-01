@@ -62,7 +62,10 @@ def post_detail(request, post_id, *args, **kwargs):
         status = 404
     return JsonResponse(data, status=status)
 
-def all_posts(request, *args, **kwargs):
+def posts(request, *args, **kwargs):
+    return render(request, "network/posts.html")
+
+def api_posts(request, *args, **kwargs):
     all_posts = Post.objects.all()
     data_list = [{"id": x.id, "content": x.content} for x in all_posts]
     data = {
