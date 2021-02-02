@@ -12,4 +12,4 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, blank=True, related_name='likes')
 
     def __str__(self):
-        return f"{self.user}: on {self.post_date} posted {self.post}"
+        return f"{self.user}: on {self.post_date} posted {self.content} with {self.likes}"

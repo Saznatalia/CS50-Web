@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonRespons
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django import forms
+from django.core import serializers
 
 from .models import User, Post
 
@@ -48,8 +49,7 @@ def index(request, *args, **kwargs):
         'posts': Post.objects.all()
     })
 
-def post_detail(request, post_id, *args, **kwargs):
-    
+def post_detail(request, post_id, *args, **kwargs):  
     data = {
         "id": post_id,    
     }
@@ -57,7 +57,11 @@ def post_detail(request, post_id, *args, **kwargs):
     try:
         post = Post.objects.get(id=post_id)
         data['content'] = post.content
-    except:
+        data['username'] = post.user.username
+        data['likes'] = serializers.serialize('json', post.likes.all())
+        data['date'] = post.post_date
+    except Exception as ex:
+        print(ex)
         data['message'] = "Not found"
         status = 404
     return JsonResponse(data, status=status)
@@ -67,7 +71,8 @@ def posts(request, *args, **kwargs):
 
 def api_posts(request, *args, **kwargs):
     all_posts = Post.objects.all()
-    data_list = [{"id": x.id, "content": x.content} for x in all_posts]
+    data_list = [{"id": x.id, "content": x.content, "username": x.user.username, "date": x.post_date, "likes": serializers.serialize('json',
+                x.likes.all())} for x in all_posts]
     data = {
         "response": data_list
     }
