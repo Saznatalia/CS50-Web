@@ -8,16 +8,25 @@ function load_posts() {
     })
     .then(response => response.json())
     .then((data) => {
-        console.log(data);
         var ListedItems = data.response;
         console.log(ListedItems);
         const postsElement = document.getElementById("posts");
         var posts = "";
-        var LikeBtn = "<button class='btn btn-primary'>Like</button>";
         for (var i = 0; i < ListedItems.length; i++) {
-            console.log(ListedItems[i]);
-            posts += "<p>" + ListedItems[i].content + "<br/>" + LikeBtn + "</p>";
+            var postObj = ListedItems[i];
+            var currentPost = FormatUserPost(postObj);
+            posts += currentPost;
         }
         postsElement.innerHTML = posts;
     })
 } 
+
+function FormatUserPost(post) {
+    var LikeBtn = "<button class='btn btn-success btn-sm'>Like</button>";
+    var dateStr = JSON.parse(JSON.stringify(post.date));
+    var formattedDate = new Date(dateStr);
+    // var formattedDate = dateStr.getMonth();
+    var formattedPost = "<h5>" + post.username + "</h5>" + post.content + 
+    "<br/>" + formattedDate + "<br/>" + LikeBtn;
+    return formattedPost
+}
