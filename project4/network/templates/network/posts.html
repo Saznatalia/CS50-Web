@@ -13,7 +13,7 @@
     </div>
     <div id='posts'>
         {% for post in page_obj %} 
-            <h5> <a href="{% url 'profile' post.user_id %}"> {{ post.user }} </a></h5>
+            <h5> <a href="{% url 'profile' post.author.id %}"> {{ post.author }} </a></h5>
             {{ post.content }}
             <div class='post_date'>
                 {{ post.post_date }}
@@ -27,25 +27,3 @@
     </div>
 {% endif %}
 {% endblock %}
-
-{% block footer %}
-<div class="footer">
-    <footer>
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-            {% endif %}
-            
-            <li class="page-item"><a class="page-link" href="/?page={{ page_obj.number }}" id="current_page"> {{ page_obj.number }}</a></li>
-
-            {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
-            {% endif %}
-        </ul>
-    </footer>
-</div>
-{% endblock %}
-
-

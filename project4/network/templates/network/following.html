@@ -1,0 +1,42 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+{% if user.is_authenticated %}
+    <div id='posts'>
+        {% if page_obj|length == 0 %} 
+            Nothing here yet because you don't follow anyone
+        {% else %}
+            {% for post in page_obj %} 
+            <div name=post>
+                <h5> <a href="{% url 'profile' post.user_id %}"> {{ post.user }} </a></h5>
+                {{ post.content }}
+                <div class='post_date'>
+                    {{ post.post_date }}
+                </div>
+                <i class="fa fa-heart like red" id='heart'></i>
+                <span>{{ post.likes|length }}</span>
+                <div>
+                    <hr class="solid">
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let posts = document.querySelectorAll("div[post]");
+            if (posts.length == 0) {
+                document.querySelector("footer").hidden = true;
+            }
+        })
+    </script>
+{% endblock %}
+
+
+
+

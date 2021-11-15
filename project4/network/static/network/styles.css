@@ -1,12 +1,33 @@
 .body {
-    margin: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.error {
+    font-weight: bold;
+    font-size: large;
+    color: red;
+    padding-bottom: 40px;
+    padding-top: 40px;
 }
 
 .post_div {
     padding: 10px;
     width: 100%;
     border: 1px solid lightgray;
+    min-height: 20vh;
+    margin-top: 20px;
+    background-color: #f8f9fa;
 }
+
+.post_date {
+    font-size: medium;
+    font-style: italic;
+}
+
+hr.solid {
+    border-top: 1px solid lightgray;
+  }
 
 .post {
     width: 100%;
@@ -15,4 +36,47 @@
 
 .btn_post {
     margin-top: 10px;
+} 
+
+#posts {
+    margin-top: 20px !important;
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: large;
+}
+
+.profile_img {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile_img h5 {
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: bold;
+    color:   #696969;
+}
+
+img {
+    border-radius: 60%;
+    max-height: 15vh;
+    max-width: auto;
+}
+
+.profile_fol {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    font-weight: bold;
+    color:   #696969;
+}
+
+.profile_fol > div {
+    min-width: 200px;
+    text-align: center;
+}
+
+.footer {
+    bottom: 0;
 }

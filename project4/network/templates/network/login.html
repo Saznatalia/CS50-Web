@@ -2,12 +2,13 @@
 
 {% block body %}
 
+{% if message %}
+    <div class='error'> 
+        {{ message }}
+    </div>
+{% endif %}
+
     <h2>Login</h2>
-
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-
     <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <div class="form-group">

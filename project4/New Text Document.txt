@@ -1,0 +1,41 @@
+# @csrf_exempt
+# @login_required
+# def posts(request, *args, **kwargs):
+    
+#     # Check if method is POST
+#     if request.method == "POST":
+       
+#         # Take in the data the user submitted and save it as form
+#         form = NewPostForm(request.POST)
+        
+#         # Check if form data is valid (server-side)
+#         if form.is_valid(): 
+#             new_post = form.cleaned_data["new_post"]
+#             user = request.user 
+            
+#             # Create new post
+#             post = Post.objects.create(user=user, content=new_post)
+#             return HttpResponseRedirect(reverse("posts"))
+        
+#         # If the form is invalid, re-render the page with existing information.    
+#         else:
+#             return render(request, "network/posts.html", {'form': form})
+             
+#     # If method is GET return the page with empty form
+#     return render(request, "network/posts.html", {'form': NewPostForm()})
+
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print(data)
+        btn_value = data['btn_value']
+        user_to_follow = data['user_id']
+        if btn_value == 'FOLLOW':
+            user_profile.following.add(user_to_follow)
+            user_profile.save()
+            profile_profile.follower.add(user)
+            profile_profile.save()
+            print("Wanna follow " + user_to_follow)
+            return JsonResponse(status=status)
+        if btn_value == 'UNFOLLOW':
+            print("Wanna UNfollow " + user_to_follow)
