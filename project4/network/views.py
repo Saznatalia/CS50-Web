@@ -61,68 +61,45 @@ def profile(request, profile_id):
         btn_value = data['btn_value']
         if profile is not None:
             if btn_value == 'FOLLOW':
-                print(str(user_profile.user.username) + " wants to follow " + str(profile.user.username))
-                user_profile.add_relationship(profile)
-                return JsonResponse(status=201, message="Successfully followed!")
-                
+                user_profile.add_relationship(profile)                
             if btn_value == 'UNFOLLOW':
-                print(str(user_profile.user.username) + " wants to unfollow " + str(profile.user.username))
                 user_profile.delete_relationship(profile)
-                return JsonResponse(status=202, message="Successfully unfollowed!")
-                
+            message = f'You {btn_value.lower()}ed {profile} successfully!'
+            return JsonResponse({"status": 200, "message": message})
+
         else:
             return JsonResponse(status=404)
-
-    # Info about profile to display
-    profile = Profile.objects.get(id=profile_id)
-    if profile is not None:
-        profile_n_followers = len(profile.get_followers())
-        profile_n_following = len(profile.get_following())
-        profile_paginator = Paginator(Post.objects.filter(author=profile_id).order_by('post_date').reverse(), 10)
-        page_number = request.GET.get('page', 1)
-        page_obj = profile_paginator.get_page(page_number)
-        return render(request, "network/profile.html", {"username": profile.user.username, 
-                                                        "profile_id": profile_id,
-                                                        "profile": profile, 
-                                                        "page_obj": page_obj,
-                                                        "n_followers": profile_n_followers,
-                                                        "n_following": profile_n_following,
-                                                        "user_following_list": user_profile.get_following()
-                                                        })
+    # Get request
+    else:
+        profile = Profile.objects.get(id=profile_id)
+        if profile is not None:
+            profile_n_followers = len(profile.get_followers())
+            profile_n_following = len(profile.get_following())
+            profile_paginator = Paginator(Post.objects.filter(author=profile_id).order_by('post_date').reverse(), 10)
+            page_number = request.GET.get('page', 1)
+            page_obj = profile_paginator.get_page(page_number)
+            return render(request, "network/profile.html", {"username": profile.user.username, 
+                                                            "profile_id": profile_id,
+                                                            "profile": profile, 
+                                                            "page_obj": page_obj,
+                                                            "n_followers": profile_n_followers,
+                                                            "n_following": profile_n_following,
+                                                            "user_following_list": user_profile.get_following()
+                                                            })
 
 @login_required
 def following(request):
-    # If user is logged in then show posts and new post page
-    if request.user.is_authenticated:
-        # List of all user objects that the request user(current user) follows
-        following_list = []
-        user=request.user
-        print(user)
-        # Queryset of Profile class of user following
-        following_list_query = user.following.all()
-        print(user.follower.all)
-        print(following_list_query)
-        # Extracting the user object from the Profle queryset of user following
-        for following in following_list_query:
-            following_list.append(following.following)
-            print(following.following)
-        print(following_list)
-
-        posts = []
-        # Getting all the Post objects from the users that the current user follows
-        for user in following_list:
-            posts.extend(Post.objects.filter(user=user).order_by('post_date').reverse())
-        
-        paginator = Paginator(posts, 10)
-        page_number = request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_number)
-        
-        return render(request, "network/following.html", {"page_obj": page_obj})
-
-    # Everyone else is prompted to sign in
-    else:
-        return HttpResponseRedirect(reverse("login"))
-
+    user_profile = Profile.objects.get(user=request.user)
+    following_posts = []
+    # Getting all the Post objects from the users that the current user follows
+    for user in list(user_profile.get_following()):
+        following_posts.extend(Post.objects.filter(author=user).order_by('post_date').reverse())
+    
+    paginator = Paginator(following_posts, 10)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, "network/following.html", {"page_obj": page_obj})
 
 def login_view(request):
     if request.method == "POST":

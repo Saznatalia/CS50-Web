@@ -9,7 +9,7 @@
         {% else %}
             {% for post in page_obj %} 
             <div name=post>
-                <h5> <a href="{% url 'profile' post.user_id %}"> {{ post.user }} </a></h5>
+                <h5> <a href="{% url 'profile' post.author.id %}"> {{ post.author }} </a></h5>
                 {{ post.content }}
                 <div class='post_date'>
                     {{ post.post_date }}
