@@ -8,7 +8,7 @@
         <form action="{% url 'index' %}" method="post" id="post">
             {% csrf_token %}
             {{ form }}
-            <input class="btn_post" type="submit" value="Post">
+            <input class='btn btn-primary' type="submit" value="POST">
         </form>
     </div>
     <div id='posts'>

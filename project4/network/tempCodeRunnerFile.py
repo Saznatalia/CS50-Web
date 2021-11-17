@@ -1,1 +1,1 @@
-t User, Post, Profile
+User, Post, Profile

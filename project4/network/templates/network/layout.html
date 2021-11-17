@@ -4,6 +4,8 @@
 <html lang="en">
     <head>
         <title>{% block title %}Social Network{% endblock %}</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
@@ -12,36 +14,44 @@
         {% endblock %}
     </head>
     <body>
-
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand" href="{% url 'index' %}">Network</a> 
-            <div>
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'index' %}">All Posts</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'following' %}">Following</a>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" 
+            class="navbar-toggler ml-auto custom-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon" ></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="navbar-nav mr-auto mt-2">
+                    {% if user.is_authenticated %}
+                    {% url 'profile' user.id as url %}
+                    <li class="nav-item {% if request.path == url %} active {% endif %}">
+                        <a class="nav-link" href="{{ url }}">{{ user.username }}</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'profile' user.id %}"><strong>{{ user.username }}</strong></a>
+                    {% url 'index' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">All Posts</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    {% url 'following' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">Following</a>
                     </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    {% url 'logout' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">Log Out</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
+                    {% else %}
+                    {% url 'login' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">Log In</a>
                     </li>
-                {% endif %}
-              </ul>
+                    {% url 'register' as url %}
+                    <li class="nav-item {% if request.path == url %}active{% endif %}">
+                        <a class="nav-link" href="{{ url }}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
-          </nav>
-        
+        </nav>
         <div class="body">
             {% block body %}
             {% endblock %}
