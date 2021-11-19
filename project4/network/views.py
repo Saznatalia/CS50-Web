@@ -1,6 +1,7 @@
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.checks import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect, JsonResponse
@@ -14,24 +15,22 @@ from .forms import NewPostForm
 def index(request):
     # If user is logged in then show posts and new post page
     if request.user.is_authenticated:
-        profile = Profile.objects.get(user=request.user)
+        user_profile = Profile.objects.get(user=request.user)
         if request.method == "POST":
                 # data = json.loads(request.body)
                 form = NewPostForm(request.POST)
                 if form.is_valid():
                     content = form.cleaned_data['new_post']
-                    new_post = Post.objects.create(author=profile, content=content)
+                    new_post = Post.objects.create(author=user_profile, content=content)
                     new_post.save()
                     return HttpResponseRedirect(reverse("index"))
         else:
             form = NewPostForm()
 
         paginator = Paginator(Post.objects.all().order_by('post_date').reverse(), 10)
-
         page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
-        # posts = [x.serialize() for x in page_obj]
-        return render(request, "network/posts.html", {"form": form, "page_obj": page_obj})
+        return render(request, "network/posts.html", {"form": form, "page_obj": page_obj, "user_profile": user_profile})
 
     # Everyone else is prompted to sign in
     else:
@@ -100,6 +99,18 @@ def following(request):
     page_obj = paginator.get_page(page_number)
     
     return render(request, "network/following.html", {"page_obj": page_obj})
+
+@login_required
+def like(request):
+    user_profile = Profile.objects.get(user=request.user)
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        post = Post.objects.get(id=data['post_id'])
+        if post is not None:
+            post.likes.add(user_profile)
+            return JsonResponse({'likes': post.get_total_likes()})
+
 
 def login_view(request):
     if request.method == "POST":

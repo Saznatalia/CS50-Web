@@ -5,24 +5,30 @@
 {% if user.is_authenticated %}
     <div class='post_div'>
         <h5>New Post</h5>
-        <form action="{% url 'index' %}" method="post" id="post">
+        <form action="{% url 'index' %}" method="post" id="new_post">
             {% csrf_token %}
             {{ form }}
             <input class='btn btn-primary' type="submit" value="POST">
         </form>
     </div>
     <div id='posts'>
-        {% for post in page_obj %} 
+        {% for post in page_obj %}
+        <div name='post'> 
             <h5> <a href="{% url 'profile' post.author.id %}"> {{ post.author }} </a></h5>
             {{ post.content }}
             <div class='post_date'>
                 {{ post.post_date }}
             </div>
-            <i class="fa fa-heart like red" id='heart'></i>
-            <span>{{ post.likes|length }}</span>
+            {% if user_profile in post.likes.all %}
+            <i class="fa fa-heart" style="color:red" id='heart' data-post-id="{{ post.id }}"></i>
+            {% else %}
+            <i class="fa fa-heart" id='heart' data-post-id="{{ post.id }}"></i>
+            {% endif %}
+            <span id="post{{ post.id }}">{{ post.likes.count }}</span>
             <div>
                 <hr class="solid">
             </div>
+        </div>
         {% endfor %}
     </div>
 {% endif %}

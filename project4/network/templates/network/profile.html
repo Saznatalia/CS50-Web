@@ -17,7 +17,6 @@
         </div> 
     </div>
     {% if user.id != profile_id %}
-
         {% if profile in user_following_list %}
             <div class="profile_img" style="padding-top: 20px;">
                 <input class='btn btn-primary' type="submit" value="UNFOLLOW" name='follow_btn' onclick="follow(this, '{{ profile_id }}')">
@@ -30,64 +29,20 @@
     {% endif %}
 
     <div id='posts'>
-    {% for post in page_obj %} 
+    {% for post in page_obj %} \
+    <div name='post'>
         <h5> <a href="{% url 'profile' profile_id %}"> {{ post.user }} </a></h5>
         {{ post.content }}
         <div class='post_date'>
             {{ post.post_date }}
         </div>
-        <i class="fa fa-heart like red" id='heart'></i>
+        <i class="fa fa-heart" id='heart' data-post-id="{{ post.id }}"></i>
         <span>{{ post.likes|length }}</span>
         <div>
             <hr class="solid">
         </div>
+    </div>
     {% endfor %}
     </div>
 {% endif %}
-{% endblock %}
-
-{% block script %}
-<script>
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    function follow(btn, id) {
-        fetch(`/profile/${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken':  getCookie('csrftoken')
-            },
-            body: JSON.stringify({'btn_value': btn.value, 'user_id': id})
-        })
-        .then(response => {
-            console.log(response);
-            return response.json()
-        })
-        .then(result => {
-            console.log(result);
-            if (result['status'] == 200) {
-                console.log("Success!!!");
-                alert(result.message);
-                location.reload();
-            }
-            if (result['status'] == 404) {
-                console.log("User you want to follow doesn't exist");
-            }
-        })
-    }
-</script>
 {% endblock %}

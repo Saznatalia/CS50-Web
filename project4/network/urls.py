@@ -12,6 +12,7 @@ urlpatterns = [
     path("posts/<int:post_id>", views.post_detail, name="post_detail"),
     path("profile/<int:profile_id>", views.profile, name="profile"),
     path("following", views.following, name="following"),
+    path("like", views.like, name="like"),
 ]
 
 if settings.DEBUG:

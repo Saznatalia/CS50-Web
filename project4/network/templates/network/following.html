@@ -8,13 +8,13 @@
             Nothing here yet because you don't follow anyone
         {% else %}
             {% for post in page_obj %} 
-            <div name=post>
+            <div name='post'>
                 <h5> <a href="{% url 'profile' post.author.id %}"> {{ post.author }} </a></h5>
                 {{ post.content }}
                 <div class='post_date'>
                     {{ post.post_date }}
                 </div>
-                <i class="fa fa-heart like red" id='heart'></i>
+                <i class="fa fa-heart" id='heart' data-post-id="{{ post.id }}"></i>
                 <span>{{ post.likes|length }}</span>
                 <div>
                     <hr class="solid">
@@ -24,17 +24,6 @@
         {% endif %}
     </div>
 {% endif %}
-{% endblock %}
-
-{% block script %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let posts = document.querySelectorAll("div[post]");
-            if (posts.length == 0) {
-                document.querySelector("footer").hidden = true;
-            }
-        })
-    </script>
 {% endblock %}
 
 

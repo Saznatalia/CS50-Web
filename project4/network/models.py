@@ -44,5 +44,8 @@ class Post(models.Model):
     content = models.TextField()
     likes = models.ManyToManyField(Profile, blank=True, related_name='likes')
 
+    def get_total_likes(self):
+        return self.likes.count()
+
     def __str__(self):
         return f"{self.author}: on {self.post_date} posted {self.content} with {self.likes}"
