@@ -103,13 +103,17 @@ def following(request):
 @login_required
 def like(request):
     user_profile = Profile.objects.get(user=request.user)
-
     if request.method == "POST":
         data = json.loads(request.body)
         post = Post.objects.get(id=data['post_id'])
         if post is not None:
-            post.likes.add(user_profile)
-            return JsonResponse({'likes': post.get_total_likes()})
+            liked = False
+            if user_profile in post.likes.all():
+                post.likes.remove(user_profile)
+                liked = True
+            else:
+                post.likes.add(user_profile)
+            return JsonResponse({'likes': post.get_total_likes(), "liked": liked})
 
 
 def login_view(request):

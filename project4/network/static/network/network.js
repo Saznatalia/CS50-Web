@@ -16,7 +16,13 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(async response => {
                 const result = await response.json();
-                heart.style.color = 'red';
+                console.log(result)
+                if (result['liked'] == false) {
+                    heart.style.color = 'red';
+                }
+                if (result['liked'] == true) {
+                    heart.style.color = 'black';
+                }
                 document.querySelector(`#post${postId}`).innerHTML = result['likes']
             })
         }
