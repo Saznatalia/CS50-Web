@@ -24,31 +24,31 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="navbar-nav mr-auto mt-2">
                     {% if user.is_authenticated %}
-                    {% url 'profile' user.id as url %}
-                    <li class="nav-item {% if request.path == url %} active {% endif %}">
-                        <a class="nav-link" href="{{ url }}">{{ user.username }}</a>
-                    </li>
-                    {% url 'index' as url %}
-                    <li class="nav-item {% if request.path == url %}active{% endif %}">
-                        <a class="nav-link" href="{{ url }}">All Posts</a>
-                    </li>
-                    {% url 'following' as url %}
-                    <li class="nav-item {% if request.path == url %}active{% endif %}">
-                        <a class="nav-link" href="{{ url }}">Following</a>
-                    </li>
-                    {% url 'logout' as url %}
-                    <li class="nav-item {% if request.path == url %}active{% endif %}">
-                        <a class="nav-link" href="{{ url }}">Log Out</a>
-                    </li>
+                        {% url 'profile' user_profile.id as url %}
+                        <li class="nav-item {% if request.path == url %} active {% endif %}">
+                            <a class="nav-link" href="{{ url }}">{{ user.username }}</a>
+                        </li>
+                        {% url 'index' as url %}
+                        <li class="nav-item {% if request.path == url %}active{% endif %}">
+                            <a class="nav-link" href="{{ url }}">All Posts</a>
+                        </li>
+                        {% url 'following' as url %}
+                        <li class="nav-item {% if request.path == url %}active{% endif %}">
+                            <a class="nav-link" href="{{ url }}">Following</a>
+                        </li>
+                        {% url 'logout' as url %}
+                        <li class="nav-item {% if request.path == url %}active{% endif %}">
+                            <a class="nav-link" href="{{ url }}">Log Out</a>
+                        </li>
                     {% else %}
-                    {% url 'login' as url %}
-                    <li class="nav-item {% if request.path == url %}active{% endif %}">
-                        <a class="nav-link" href="{{ url }}">Log In</a>
-                    </li>
-                    {% url 'register' as url %}
-                    <li class="nav-item {% if request.path == url %}active{% endif %}">
-                        <a class="nav-link" href="{{ url }}">Register</a>
-                    </li>
+                        {% url 'login' as url %}
+                        <li class="nav-item {% if request.path == url %}active{% endif %}">
+                            <a class="nav-link" href="{{ url }}">Log In</a>
+                        </li>
+                        {% url 'register' as url %}
+                        <li class="nav-item {% if request.path == url %}active{% endif %}">
+                            <a class="nav-link" href="{{ url }}">Register</a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>

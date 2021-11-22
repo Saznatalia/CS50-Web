@@ -16,6 +16,7 @@ def index(request):
     # If user is logged in then show posts and new post page
     if request.user.is_authenticated:
         user_profile = Profile.objects.get(user=request.user)
+        print(user_profile.id)
         if request.method == "POST":
                 # data = json.loads(request.body)
                 form = NewPostForm(request.POST)
@@ -60,9 +61,12 @@ def profile(request, profile_id):
         btn_value = data['btn_value']
         if profile is not None:
             if btn_value == 'FOLLOW':
-                user_profile.add_relationship(profile)                
+                user_profile.add_relationship(profile)
+                user_profile.save()              
             if btn_value == 'UNFOLLOW':
                 user_profile.delete_relationship(profile)
+                print(user_profile.get_following())
+                user_profile.save()
             message = f'You {btn_value.lower()}ed {profile} successfully!'
             return JsonResponse({"status": 200, "message": message})
 
@@ -72,18 +76,12 @@ def profile(request, profile_id):
     else:
         profile = Profile.objects.get(id=profile_id)
         if profile is not None:
-            profile_n_followers = len(profile.get_followers())
-            profile_n_following = len(profile.get_following())
             profile_paginator = Paginator(Post.objects.filter(author=profile_id).order_by('post_date').reverse(), 10)
             page_number = request.GET.get('page', 1)
             page_obj = profile_paginator.get_page(page_number)
-            return render(request, "network/profile.html", {"username": profile.user.username, 
-                                                            "profile_id": profile_id,
-                                                            "profile": profile, 
+            return render(request, "network/profile.html", {"profile": profile, 
                                                             "page_obj": page_obj,
-                                                            "n_followers": profile_n_followers,
-                                                            "n_following": profile_n_following,
-                                                            "user_following_list": user_profile.get_following()
+                                                            "user_profile": user_profile
                                                             })
 
 @login_required
@@ -98,7 +96,7 @@ def following(request):
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     
-    return render(request, "network/following.html", {"page_obj": page_obj})
+    return render(request, "network/following.html", {"page_obj": page_obj, "user_profile": user_profile})
 
 @login_required
 def like(request):

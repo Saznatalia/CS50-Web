@@ -14,11 +14,13 @@
                 <div class='post_date'>
                     {{ post.post_date }}
                 </div>
+                {% if user_profile in post.likes.all %}
+                <i class="fa fa-heart" style="color:red" id='heart' data-post-id="{{ post.id }}"></i>
+                {% else %}
                 <i class="fa fa-heart" id='heart' data-post-id="{{ post.id }}"></i>
-                <span>{{ post.likes|length }}</span>
-                <div>
-                    <hr class="solid">
-                </div>
+                {% endif %}
+                <span id="post{{ post.id }}">{{ post.likes.count }}</span>
+                <div><hr class="solid"></div>
             </div>
             {% endfor %}
         {% endif %}

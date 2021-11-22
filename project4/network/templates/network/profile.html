@@ -1,48 +1,48 @@
 {% extends "network/layout.html" %}
 {% load static %}
 {% block body %}
-{% if user.is_authenticated %}
     <div class="profile_img">
         <img src="{% static 'default.jpg' %}" alt="Default profile image"> 
-        <h5> {{ username }} </h5>
+        <h5> {{ profile.user.username }} </h5>
     </div>
     <div class="profile_fol">
         <div>
-            {{ n_followers }} <br/>
+            {{ profile.get_followers.count }} <br/>
             FOLLOWERS
         </div>
         <div>
-            {{ n_following }} <br/>
+            {{ profile.get_following.count }} <br/>
             FOLLOWING
         </div> 
     </div>
-    {% if user.id != profile_id %}
-        {% if profile in user_following_list %}
+    {% if user_profile.user.id != profile.user.id %}
+        {% if user_profile in profile.get_followers.all %}
             <div class="profile_img" style="padding-top: 20px;">
-                <input class='btn btn-primary' type="submit" value="UNFOLLOW" name='follow_btn' onclick="follow(this, '{{ profile_id }}')">
+                <input class='btn btn-primary' type="submit" value="UNFOLLOW" name='follow_btn' onclick="follow(this, '{{ profile.id }}')">
             </div>
         {% else %}
             <div class="profile_img" style="padding-top: 20px;">
-                <input class='btn btn-primary' type="submit" value="FOLLOW" name='follow_btn' onclick="follow(this, '{{ profile_id }}')">
+                <input class='btn btn-primary' type="submit" value="FOLLOW" name='follow_btn' onclick="follow(this, '{{ profile.id }}')">
             </div>
         {% endif %}
     {% endif %}
 
     <div id='posts'>
-    {% for post in page_obj %} \
+    {% for post in page_obj %}
     <div name='post'>
-        <h5> <a href="{% url 'profile' profile_id %}"> {{ post.user }} </a></h5>
+        <h5> <a href="{% url 'profile' profile.id %}"> {{ post.user }} </a></h5>
         {{ post.content }}
         <div class='post_date'>
             {{ post.post_date }}
         </div>
+        {% if user_profile in post.likes.all %}
+        <i class="fa fa-heart" style="color:red" id='heart' data-post-id="{{ post.id }}"></i>
+        {% else %}
         <i class="fa fa-heart" id='heart' data-post-id="{{ post.id }}"></i>
-        <span>{{ post.likes|length }}</span>
-        <div>
-            <hr class="solid">
-        </div>
+        {% endif %}
+        <span id="post{{ post.id }}">{{ post.likes.count }}</span>
+        <div><hr class="solid"></div>
     </div>
     {% endfor %}
     </div>
-{% endif %}
 {% endblock %}

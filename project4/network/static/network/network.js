@@ -67,7 +67,6 @@ function follow(btn, id) {
     })
     .then(result => {
         if (result['status'] == 200) {
-            console.log("Success!!!");
             alert(result.message);
             location.reload();
         }
