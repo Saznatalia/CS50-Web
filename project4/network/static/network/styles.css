@@ -4,7 +4,7 @@
     padding: 20px;
 }
 
-.body a {
+.black_link {
     color: black;
 }
 
@@ -50,6 +50,12 @@
 .post {
     width: 100%;
     height: 10vh;
+}
+
+.post_edit {
+    font-size: medium;
+    font-style: italic;
+    color: #007bff !important;
 }
 
 .post_date {

@@ -16,7 +16,6 @@ def index(request):
     # If user is logged in then show posts and new post page
     if request.user.is_authenticated:
         user_profile = Profile.objects.get(user=request.user)
-        print(user_profile.id)
         if request.method == "POST":
                 # data = json.loads(request.body)
                 form = NewPostForm(request.POST)
@@ -38,19 +37,13 @@ def index(request):
         return HttpResponseRedirect(reverse("login"))
 
 @login_required
-def post_detail(request, post_id, *args, **kwargs):  
-    data = {
-        "id": post_id,    
-    }
-    status = 200
-    try:
-        post = Post.objects.get(id=post_id)
-    except Exception as ex:
-        print(ex)
-        data['message'] = "Not found"
-        status = 404
-    return JsonResponse(post.serialize(), status=status)
-
+def edit(request, post_id):
+    post = Post.objects.get(id=post_id)
+    if post is not None:
+        status=200
+    else:
+        status=404
+    return JsonResponse({"status": status})
 
 @login_required
 def profile(request, profile_id):

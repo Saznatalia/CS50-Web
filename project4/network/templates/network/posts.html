@@ -14,7 +14,10 @@
     <div id='posts'>
         {% for post in page_obj %}
         <div name='post'> 
-            <h5> <a href="{% url 'profile' post.author.id %}"> {{ post.author }} </a></h5>
+            <h5> <a href="{% url 'profile' post.author.id %}" class="black_link"> {{ post.author }} </a></h5>
+            {% if post.author == user_profile %}
+                <div class="post_edit"><a href="{% url 'edit' post.id %}">Edit</a></div>
+            {% endif %}
             {{ post.content }}
             <div class='post_date'>
                 {{ post.post_date }}
