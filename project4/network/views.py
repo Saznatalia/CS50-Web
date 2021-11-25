@@ -38,8 +38,10 @@ def index(request):
 
 @login_required
 def edit(request, post_id):
+    user_profile = Profile.objects.get(user=request.user)
     post = Post.objects.get(id=post_id)
-    if post is not None:
+    user_posts = Post.objects.filter(author=user_profile)
+    if post is not None and post in user_posts:
         status=200
     else:
         status=404
