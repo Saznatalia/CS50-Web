@@ -74,6 +74,21 @@ hr.solid {
     font-size: large;
 }
 
+.edit_btn {
+    background: none!important;
+    border: none;
+    padding: 0;
+    font-size: medium;
+    font-style: italic;
+    color: #007bff !important;
+    text-decoration: underline;
+    outline: none;
+}
+
+.edit_btn:focus {
+    outline: none;
+}
+
 .profile_img {
     text-align: center;
     max-width: 800px;

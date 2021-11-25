@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('#heart').forEach(heart => {
         heart.onclick = function() {
             let postId = this.getAttribute("data-post-id");
-            console.log(postId);
             fetch('/like', {
                 method: 'POST',
                 headers: {
@@ -16,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .then(async response => {
                 const result = await response.json();
-                console.log(result)
                 if (result['liked'] == false) {
                     heart.style.color = 'red';
                 }
@@ -74,4 +72,65 @@ function follow(btn, id) {
             console.log("User you want to follow doesn't exist");
         }
     })
+}
+
+function edit_post(btn, postId) {
+    const editPostDiv = btn.parentNode;
+    postDiv = editPostDiv.parentNode;
+    oldContent = document.getElementById("content" + postId).innerText;
+    const newContentTextArea = document.createElement('textarea');
+    newContentTextArea.className = "post";
+    newContentTextArea.value = oldContent;
+
+    const savePostBtn = document.createElement('button');
+    savePostBtn.className = "btn btn-primary btn-sm";
+    savePostBtn.innerHTML = "Save";
+    savePostBtn.addEventListener('click', () => {
+        fetch(`/edit/${postId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                'post_id': postId, 
+                'new_content': newContentTextArea.value
+            }) 
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (data['status'] == 200) {
+                location.reload();
+            }
+            if (data['status'] == 403) {
+                console.log("Something went wrong, we couldn't update the post!");
+            }
+        })
+    })
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = "btn btn-secondary btn-sm";
+    cancelBtn.style = "margin-left: 20px;";
+    cancelBtn.innerHTML = "Cancel";
+    cancelBtn.addEventListener('click', () => {
+        newContentTextArea.style.display = 'none';
+        savePostBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        btn.style.display = '';
+        document.getElementById("content" + postId).style.display = '';
+        postDiv.getElementsByClassName("post_date")[0].style.display = '';
+        postDiv.getElementsByClassName("fa fa-heart")[0].style.display = '';
+        document.getElementById("post" + postId).style.display = '';
+    })
+
+    editPostDiv.append(newContentTextArea);
+    editPostDiv.append(savePostBtn);
+    editPostDiv.append(cancelBtn);
+    
+    // Hide old content of div
+    btn.style.display = 'none';
+    document.getElementById("content" + postId).style.display = 'none';
+    postDiv.getElementsByClassName("post_date")[0].style.display = 'none';
+    postDiv.getElementsByClassName("fa fa-heart")[0].style.display = 'none';
+    document.getElementById("post" + postId).style.display = 'none';
 }

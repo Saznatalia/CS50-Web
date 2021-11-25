@@ -17,7 +17,6 @@ def index(request):
     if request.user.is_authenticated:
         user_profile = Profile.objects.get(user=request.user)
         if request.method == "POST":
-                # data = json.loads(request.body)
                 form = NewPostForm(request.POST)
                 if form.is_valid():
                     content = form.cleaned_data['new_post']
@@ -39,12 +38,18 @@ def index(request):
 @login_required
 def edit(request, post_id):
     user_profile = Profile.objects.get(user=request.user)
-    post = Post.objects.get(id=post_id)
-    user_posts = Post.objects.filter(author=user_profile)
-    if post is not None and post in user_posts:
-        status=200
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        post = Post.objects.get(id=data['post_id'])
+        user_posts = Post.objects.filter(author=user_profile)
+        if post is not None and post in user_posts:
+            new_content = data['new_content']
+            post.content = new_content
+            post.save()
+            status = 200
+            
     else:
-        status=404
+        status=403
     return JsonResponse({"status": status})
 
 @login_required
