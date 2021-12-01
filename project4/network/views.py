@@ -38,19 +38,19 @@ def index(request):
 @login_required
 def edit(request, post_id):
     user_profile = Profile.objects.get(user=request.user)
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        post = Post.objects.get(id=data['post_id'])
-        user_posts = Post.objects.filter(author=user_profile)
-        if post is not None and post in user_posts:
-            new_content = data['new_content']
-            post.content = new_content
-            post.save()
-            status = 200
-            
-    else:
-        status=403
-    return JsonResponse({"status": status})
+    if request.method != 'POST':
+        return JsonResponse({"status": 403})
+    data = json.loads(request.body)
+    form = NewPostForm({'new_post': data['new_content']})
+    if not form.is_valid():
+        return JsonResponse({"status": 422})
+    post = Post.objects.filter(author=user_profile).get(id=data['post_id'])
+    if post is None:
+         return JsonResponse({"status": 404})
+    new_content = form.cleaned_data['new_post']
+    post.content = new_content
+    post.save()
+    return JsonResponse({"status": 200})
 
 @login_required
 def profile(request, profile_id):
@@ -65,7 +65,6 @@ def profile(request, profile_id):
                 user_profile.save()              
             if btn_value == 'UNFOLLOW':
                 user_profile.delete_relationship(profile)
-                print(user_profile.get_following())
                 user_profile.save()
             message = f'You {btn_value.lower()}ed {profile} successfully!'
             return JsonResponse({"status": 200, "message": message})

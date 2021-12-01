@@ -86,6 +86,9 @@ function edit_post(btn, postId) {
     savePostBtn.className = "btn btn-primary btn-sm";
     savePostBtn.innerHTML = "Save";
     savePostBtn.addEventListener('click', () => {
+        if (newContentTextArea.value == "") {
+            alert("Your entry is empty!");
+        }
         fetch(`/edit/${postId}`, {
             method: 'POST',
             headers: {
@@ -122,7 +125,6 @@ function edit_post(btn, postId) {
         postDiv.getElementsByClassName("fa fa-heart")[0].style.display = '';
         document.getElementById("post" + postId).style.display = '';
     })
-
     editPostDiv.append(newContentTextArea);
     editPostDiv.append(savePostBtn);
     editPostDiv.append(cancelBtn);

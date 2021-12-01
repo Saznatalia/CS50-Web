@@ -37,7 +37,6 @@ class Relationship(models.Model):
     from_user = models.ForeignKey(Profile, related_name='from_user', on_delete=models.DO_NOTHING)
     to_user = models.ForeignKey(Profile, related_name='to_user', on_delete=models.DO_NOTHING)
 
-
 class Post(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='author')
     post_date = models.DateTimeField(default=datetime.now)
@@ -46,6 +45,9 @@ class Post(models.Model):
 
     def get_total_likes(self):
         return self.likes.count()
+
+    def is_valid_post(self):
+        return self.content != ""
 
     def __str__(self):
         return f"{self.author}: on {self.post_date} posted {self.content} with {self.likes}"

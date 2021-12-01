@@ -3,7 +3,7 @@
 
 {% block body %}
 {% if user.is_authenticated %}
-    <div class='post_div'>
+    <div class='new_post'>
         <h5>New Post</h5>
         <form action="{% url 'index' %}" method="post" id="new_post">
             {% csrf_token %}
@@ -11,6 +11,7 @@
             <input class='btn btn-primary' type="submit" value="POST">
         </form>
     </div>
+    
     <div id='posts'>
         {% for post in page_obj %}
         <div name='post'> 
