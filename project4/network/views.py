@@ -2,6 +2,7 @@ import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.checks import messages
+from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect, JsonResponse
@@ -38,19 +39,31 @@ def index(request):
 @login_required
 def edit(request, post_id):
     user_profile = Profile.objects.get(user=request.user)
-    if request.method != 'POST':
-        return JsonResponse({"status": 403})
-    data = json.loads(request.body)
-    form = NewPostForm({'new_post': data['new_content']})
-    if not form.is_valid():
-        return JsonResponse({"status": 422})
-    post = Post.objects.filter(author=user_profile).get(id=data['post_id'])
-    if post is None:
-         return JsonResponse({"status": 404})
-    new_content = form.cleaned_data['new_post']
-    post.content = new_content
-    post.save()
-    return JsonResponse({"status": 200})
+    if request.method == 'PUT':
+        data = json.loads(request.body)
+        form = NewPostForm({'new_post': data['new_content']})
+        if not form.is_valid():
+            return JsonResponse({
+                "error": "Form is invalid"}, status=402)
+
+        post = Post.objects.filter(author=user_profile).get(id=data['post_id'])
+        if post is None:
+            return JsonResponse({
+                "error": "Post not found"
+            }, status=400)
+        
+        new_content = form.cleaned_data['new_post']
+        post.content = new_content
+        post.save()
+        return HttpResponse(status=204)
+    
+    # Email must be via PUT
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=401)
+
+
 
 @login_required
 def profile(request, profile_id):

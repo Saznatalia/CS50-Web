@@ -57,10 +57,10 @@ function follow(btn, id) {
             'Content-Type': 'application/json',
             'X-CSRFToken':  getCookie('csrftoken')
         },
-        body: JSON.stringify({'btn_value': btn.value, 'user_id': id})
+        body: JSON.stringify({'btn_value': btn.value, 
+                              'user_id': id})
     })
     .then(response => {
-        console.log(response);
         return response.json()
     })
     .then(result => {
@@ -89,26 +89,24 @@ function edit_post(btn, postId) {
         if (newContentTextArea.value == "") {
             alert("Your entry is empty!");
         }
-        fetch(`/edit/${postId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({
-                'post_id': postId, 
-                'new_content': newContentTextArea.value
-            }) 
-        })
-        .then(async response => {
-            const data = await response.json();
-            if (data['status'] == 200) {
-                location.reload();
-            }
-            if (data['status'] == 403) {
-                console.log("Something went wrong, we couldn't update the post!");
-            }
-        })
+        else {
+            fetch(`/edit/${postId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    'post_id': postId, 
+                    'new_content': newContentTextArea.value
+                }) 
+            })
+            .then(response => {
+                if (response.status == 204) {
+                    location.reload();
+                }
+            })
+        }
     })
 
     const cancelBtn = document.createElement('button');
@@ -135,4 +133,5 @@ function edit_post(btn, postId) {
     postDiv.getElementsByClassName("post_date")[0].style.display = 'none';
     postDiv.getElementsByClassName("fa fa-heart")[0].style.display = 'none';
     document.getElementById("post" + postId).style.display = 'none';
+
 }
