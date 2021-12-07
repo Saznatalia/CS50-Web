@@ -1,15 +1,16 @@
+import json
 import unittest
 from django.test import TestCase, Client
 from django.urls import reverse, resolve
 
-from .models import Profile, Relationship, Post, User
+from .models import Profile, Post, User
 from network.views import index, login_view, logout_view, register, edit, profile, following, like
 
 
 class PostTestCase(TestCase):
     def setUp(self):
         # create user
-        self.user = User.objects.create(username='username', email='username@test.com', password='password')
+        self.user = User.objects.create_user(username='username', email='username@test.com', password='password')
 
         # create profile
         self.profile = Profile.objects.create(user=self.user)
@@ -31,8 +32,8 @@ class PostTestCase(TestCase):
 class ProfileTestCase(TestCase):
     def setUp(self):
         # create users
-        self.user1 = User.objects.create(username='username', email='username@test.com', password='password')
-        self.user2 = User.objects.create(username='username2', email='username2@test.com', password='password2')
+        self.user1 = User.objects.create_user(username='username', email='username@test.com', password='password')
+        self.user2 = User.objects.create_user(username='username2', email='username2@test.com', password='password2')
 
         # create profiles
         self.profile1 = Profile.objects.create(user=self.user1)
@@ -79,16 +80,16 @@ class TestUrls(TestCase):
         url = reverse('profile', args=['1'])
         self.assertEqual(resolve(url).func, profile)
 
-    def test_index_url_resolved(self):
+    def test_following_url_resolved(self):
         url = reverse('following')
         self.assertEqual(resolve(url).func, following)
 
-    def test_index_url_resolved(self):
+    def test_like_url_resolved(self):
         url = reverse('like')
         self.assertEqual(resolve(url).func, like)
 
 
-class WebpageTests(unittest.TestCase):
+class WebpageTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='username', email='username@test.com', password='password')
         self.profile = Profile.objects.create(user=self.user)
@@ -100,6 +101,30 @@ class WebpageTests(unittest.TestCase):
     def test_index(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
+
+    def test_profile(self):
+        response = self.client.get(f"/profile/{self.profile.id}")
+        self.assertEqual(response.status_code, 200)
+
+    def test_following(self):
+        response = self.client.get("/following")
+        self.assertEqual(response.status_code, 200)
+
+    def test_like(self):
+        post_id = str(self.post1.id)
+        response = self.client.post("/like", json.dumps({'post_id': post_id}), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(
+            str(response.content, encoding='utf8'),
+            {'likes': 1, "liked": False}
+        )
+
+    def test_edit(self):
+        response = self.client.get(f"/edit/{self.post1.id}")
+        self.assertEqual(response.status_code, 401)
+        response2 = self.client.put(f"/edit/{self.post1.id}",
+                                    json.dumps({'post_id': self.post1.id, 'new_content': 'something new'}))
+        self.assertEqual(response2.status_code, 204)
 
 
 if __name__ == "__main__":

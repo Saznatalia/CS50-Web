@@ -13,17 +13,18 @@ from django.core.paginator import Paginator
 from .models import User, Post, Profile
 from .forms import NewPostForm
 
+
 def index(request):
     # If user is logged in then show posts and new post page
     if request.user.is_authenticated:
         user_profile = Profile.objects.get(user=request.user)
         if request.method == "POST":
-                form = NewPostForm(request.POST)
-                if form.is_valid():
-                    content = form.cleaned_data['new_post']
-                    new_post = Post.objects.create(author=user_profile, content=content)
-                    new_post.save()
-                    return HttpResponseRedirect(reverse("index"))
+            form = NewPostForm(request.POST)
+            if form.is_valid():
+                content = form.cleaned_data['new_post']
+                new_post = Post.objects.create(author=user_profile, content=content)
+                new_post.save()
+                return HttpResponseRedirect(reverse("index"))
         else:
             form = NewPostForm()
 
@@ -36,27 +37,27 @@ def index(request):
     else:
         return HttpResponseRedirect(reverse("login"))
 
+
 @login_required
 def edit(request, post_id):
     user_profile = Profile.objects.get(user=request.user)
+    post = Post.objects.filter(author=user_profile).get(id=post_id)
+    if post is None:
+        return JsonResponse({
+            "error": "Post not found"
+        }, status=400)
+
     if request.method == 'PUT':
         data = json.loads(request.body)
         form = NewPostForm({'new_post': data['new_content']})
         if not form.is_valid():
             return JsonResponse({
                 "error": "Form is invalid"}, status=402)
-
-        post = Post.objects.filter(author=user_profile).get(id=data['post_id'])
-        if post is None:
-            return JsonResponse({
-                "error": "Post not found"
-            }, status=400)
-        
         new_content = form.cleaned_data['new_post']
         post.content = new_content
         post.save()
         return HttpResponse(status=204)
-    
+
     # Email must be via PUT
     else:
         return JsonResponse({
@@ -64,18 +65,17 @@ def edit(request, post_id):
         }, status=401)
 
 
-
 @login_required
 def profile(request, profile_id):
     user_profile = Profile.objects.get(user=request.user)
-    if request.method == 'POST':       
+    if request.method == 'POST':
         data = json.loads(request.body)
         profile = Profile.objects.get(id=data['user_id'])
         btn_value = data['btn_value']
         if profile is not None:
             if btn_value == 'FOLLOW':
                 user_profile.add_relationship(profile)
-                user_profile.save()              
+                user_profile.save()
             if btn_value == 'UNFOLLOW':
                 user_profile.delete_relationship(profile)
                 user_profile.save()
@@ -85,16 +85,16 @@ def profile(request, profile_id):
         else:
             return JsonResponse(status=404)
     # Get request
-    else:
-        profile = Profile.objects.get(id=profile_id)
-        if profile is not None:
-            profile_paginator = Paginator(Post.objects.filter(author=profile_id).order_by('post_date').reverse(), 10)
-            page_number = request.GET.get('page', 1)
-            page_obj = profile_paginator.get_page(page_number)
-            return render(request, "network/profile.html", {"profile": profile, 
-                                                            "page_obj": page_obj,
-                                                            "user_profile": user_profile
-                                                            })
+    profile = Profile.objects.get(id=profile_id)
+    if profile is not None:
+        profile_paginator = Paginator(Post.objects.filter(author=profile_id).order_by('post_date').reverse(), 10)
+        page_number = request.GET.get('page', 1)
+        page_obj = profile_paginator.get_page(page_number)
+        return render(request, "network/profile.html", {"profile": profile,
+                                                        "page_obj": page_obj,
+                                                        "user_profile": user_profile
+                                                        })
+
 
 @login_required
 def following(request):
@@ -103,12 +103,13 @@ def following(request):
     # Getting all the Post objects from the users that the current user follows
     for user in list(user_profile.get_following()):
         following_posts.extend(Post.objects.filter(author=user).order_by('post_date').reverse())
-    
+
     paginator = Paginator(following_posts, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
-    
+
     return render(request, "network/following.html", {"page_obj": page_obj, "user_profile": user_profile})
+
 
 @login_required
 def like(request):
